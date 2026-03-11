@@ -27,6 +27,11 @@ export enum ErrorCode {
   CONTRACT_NOT_FOUND = 'CONTRACT_NOT_FOUND',
 
   // ============================
+  // Freelancer
+  // ============================
+  FREELANCER_ALREADY_HAS_CONTRACT = 'FREELANCER_ALREADY_HAS_CONTRACT',
+
+  // ============================
   // Work Request
   // ============================
   WORK_REQUEST_NOT_FOUND = 'WORK_REQUEST_NOT_FOUND',

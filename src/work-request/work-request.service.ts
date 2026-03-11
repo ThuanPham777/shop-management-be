@@ -10,10 +10,7 @@ import {
   Shop,
   WorkRequest,
 } from '../entities/index.js';
-import {
-  CreateWorkRequestDto,
-  WorkRequestResponseDto,
-} from './dto/index.js';
+import { CreateWorkRequestDto, WorkRequestResponseDto } from './dto/index.js';
 
 @Injectable()
 export class WorkRequestService {
@@ -118,19 +115,18 @@ export class WorkRequestService {
       );
     }
 
-    // Check for existing active contract
+    // A freelancer can only work at one shop at a time
     const activeContract = await this.contractRepository.findOne({
       where: {
         freelancer_id: freelancerProfile.id,
-        shop_id: dto.shop_id,
         status: 'active',
       },
     });
 
     if (activeContract) {
       throw new BusinessException(
-        ErrorCode.CONTRACT_ALREADY_ACTIVE,
-        'Bạn đã có hợp đồng đang hoạt động với cửa hàng này',
+        ErrorCode.FREELANCER_ALREADY_HAS_CONTRACT,
+        'Bạn đang có hợp đồng làm việc, không thể gửi yêu cầu mới',
         HttpStatus.CONFLICT,
       );
     }
@@ -206,6 +202,19 @@ export class WorkRequestService {
     }
 
     if (action === 'accepted') {
+      // A freelancer can only work at one shop at a time
+      const activeContract = await this.contractRepository.findOne({
+        where: { freelancer_id: freelancerProfile.id, status: 'active' },
+      });
+
+      if (activeContract) {
+        throw new BusinessException(
+          ErrorCode.FREELANCER_ALREADY_HAS_CONTRACT,
+          'Bạn đang có hợp đồng làm việc, không thể chấp nhận đề nghị mới',
+          HttpStatus.CONFLICT,
+        );
+      }
+
       // Transaction: update work request status + create contract
       const updated = await this.dataSource.transaction(async (manager) => {
         workRequest.status = 'accepted';
@@ -274,19 +283,18 @@ export class WorkRequestService {
       );
     }
 
-    // Check for existing active contract
+    // Owner can only send proposals to freelancers without an active contract
     const activeContract = await this.contractRepository.findOne({
       where: {
         freelancer_id: dto.freelancer_id,
-        shop_id: dto.shop_id,
         status: 'active',
       },
     });
 
     if (activeContract) {
       throw new BusinessException(
-        ErrorCode.CONTRACT_ALREADY_ACTIVE,
-        'Đã có hợp đồng đang hoạt động với freelancer này',
+        ErrorCode.FREELANCER_ALREADY_HAS_CONTRACT,
+        'Freelancer đang có hợp đồng làm việc, không thể gửi đề nghị',
         HttpStatus.CONFLICT,
       );
     }
@@ -383,6 +391,19 @@ export class WorkRequestService {
     }
 
     if (action === 'accepted') {
+      // A freelancer can only work at one shop at a time
+      const activeContract = await this.contractRepository.findOne({
+        where: { freelancer_id: workRequest.freelancer_id, status: 'active' },
+      });
+
+      if (activeContract) {
+        throw new BusinessException(
+          ErrorCode.FREELANCER_ALREADY_HAS_CONTRACT,
+          'Freelancer đang có hợp đồng làm việc, không thể chấp nhận yêu cầu',
+          HttpStatus.CONFLICT,
+        );
+      }
+
       // Transaction: update work request status + create contract
       const updated = await this.dataSource.transaction(async (manager) => {
         workRequest.status = 'accepted';
