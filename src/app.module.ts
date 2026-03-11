@@ -7,6 +7,7 @@ import databaseConfig from './config/database.config.js';
 import { AppService } from './app.service.js';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor.js';
 import { AuthModule } from './auth/auth.module.js';
+import { ProfileModule } from './profile/profile.module.js';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuthModule } from './auth/auth.module.js';
       }),
     }),
     AuthModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [
