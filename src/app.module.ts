@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { ProfileModule } from './profile/profile.module.js';
 import { ShopModule } from './shop/shop.module.js';
 import { SearchModule } from './search/search.module.js';
+import { WorkRequestModule } from './work-request/work-request.module.js';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SearchModule } from './search/search.module.js';
     ProfileModule,
     ShopModule,
     SearchModule,
+    WorkRequestModule,
   ],
   controllers: [AppController],
   providers: [
