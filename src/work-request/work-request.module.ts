@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   Contract,
   FreelancerProfile,
+  OwnerProfile,
   Shop,
   WorkRequest,
 } from '../entities/index.js';
@@ -13,7 +14,13 @@ import { WorkRequestService } from './work-request.service.js';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([WorkRequest, FreelancerProfile, Shop, Contract]),
+    TypeOrmModule.forFeature([
+      WorkRequest,
+      FreelancerProfile,
+      OwnerProfile,
+      Shop,
+      Contract,
+    ]),
     AuthModule,
   ],
   controllers: [WorkRequestController],

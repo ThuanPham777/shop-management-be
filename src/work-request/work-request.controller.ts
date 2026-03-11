@@ -18,42 +18,50 @@ import { CreateWorkRequestDto, RespondWorkRequestDto } from './dto/index.js';
 import { WorkRequestService } from './work-request.service.js';
 
 @Controller('work-requests')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('freelancer', 'shop_owner')
 export class WorkRequestController {
   constructor(private readonly workRequestService: WorkRequestService) {}
 
-  // Freelancer sends a work request
+  // Create a work request or proposal
   @Post()
-  @UseGuards(RolesGuard)
-  @Roles('freelancer')
   @HttpCode(HttpStatus.CREATED)
   @ResponseMessage('Gửi yêu cầu làm việc thành công')
-  createFreelancerRequest(
-    @CurrentUser() user: { id: string },
+  createWorkRequest(
+    @CurrentUser() user: { id: string; roles: string[] },
     @Body() dto: CreateWorkRequestDto,
   ) {
+    if (user.roles.includes('shop_owner')) {
+      return this.workRequestService.createOwnerProposal(user.id, dto);
+    }
     return this.workRequestService.createFreelancerRequest(user.id, dto);
   }
 
-  // Freelancer views all work requests
+  // List all work requests
   @Get()
-  @UseGuards(RolesGuard)
-  @Roles('freelancer')
   @ResponseMessage('Lấy danh sách yêu cầu thành công')
-  getFreelancerWorkRequests(@CurrentUser() user: { id: string }) {
+  getWorkRequests(@CurrentUser() user: { id: string; roles: string[] }) {
+    if (user.roles.includes('shop_owner')) {
+      return this.workRequestService.getOwnerWorkRequests(user.id);
+    }
     return this.workRequestService.getFreelancerWorkRequests(user.id);
   }
 
-  // Freelancer responds to an owner proposal
+  // Respond to a work request
   @Put(':id/respond')
-  @UseGuards(RolesGuard)
-  @Roles('freelancer')
   @ResponseMessage('Phản hồi yêu cầu thành công')
-  respondToOwnerProposal(
-    @CurrentUser() user: { id: string },
+  respondToWorkRequest(
+    @CurrentUser() user: { id: string; roles: string[] },
     @Param('id') id: string,
     @Body() dto: RespondWorkRequestDto,
   ) {
+    if (user.roles.includes('shop_owner')) {
+      return this.workRequestService.respondToFreelancerRequest(
+        user.id,
+        id,
+        dto.action,
+      );
+    }
     return this.workRequestService.respondToOwnerProposal(
       user.id,
       id,

@@ -13,4 +13,11 @@ export class WorkRequestResponseDto {
     phone: string | null;
     email: string | null;
   };
+  freelancer?: {
+    id: string;
+    full_name: string;
+    phone: string;
+    email: string;
+    avatar_url: string | null;
+  };
 }
