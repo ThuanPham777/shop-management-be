@@ -8,6 +8,7 @@ import { AppService } from './app.service.js';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ProfileModule } from './profile/profile.module.js';
+import { ShopModule } from './shop/shop.module.js';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ProfileModule } from './profile/profile.module.js';
     }),
     AuthModule,
     ProfileModule,
+    ShopModule,
   ],
   controllers: [AppController],
   providers: [
