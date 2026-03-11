@@ -9,6 +9,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor.
 import { AuthModule } from './auth/auth.module.js';
 import { ProfileModule } from './profile/profile.module.js';
 import { ShopModule } from './shop/shop.module.js';
+import { SearchModule } from './search/search.module.js';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ShopModule } from './shop/shop.module.js';
     AuthModule,
     ProfileModule,
     ShopModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [
