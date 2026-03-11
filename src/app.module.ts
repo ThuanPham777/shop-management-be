@@ -11,6 +11,7 @@ import { ProfileModule } from './profile/profile.module.js';
 import { ShopModule } from './shop/shop.module.js';
 import { SearchModule } from './search/search.module.js';
 import { WorkRequestModule } from './work-request/work-request.module.js';
+import { ContractModule } from './contract/contract.module.js';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { WorkRequestModule } from './work-request/work-request.module.js';
     ShopModule,
     SearchModule,
     WorkRequestModule,
+    ContractModule,
   ],
   controllers: [AppController],
   providers: [
